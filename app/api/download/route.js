@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(req) {
   const url = new URL(req.url).searchParams.get("url");
-  if (!url)
+  if (!url) {
     return NextResponse.json({ error: "Missing file URL" }, { status: 400 });
+  }
 
   const parsed = new URL(url);
   if (
@@ -15,11 +16,12 @@ export async function GET(req) {
   }
 
   const res = await fetch(url, { redirect: "follow" });
-  if (!res.ok)
+  if (!res.ok) {
     return NextResponse.json(
       { error: "Failed to fetch file" },
       { status: res.status }
     );
+  }
 
   return new NextResponse(res.body, {
     status: res.status,
@@ -29,9 +31,6 @@ export async function GET(req) {
       "Content-Disposition":
         res.headers.get("content-disposition") ||
         `attachment; filename="${parsed.pathname.split("/").pop()}"`,
-      ...(res.headers.get("content-length")
-        ? { "Content-Length": res.headers.get("content-length") }
-        : {}),
     },
   });
 }
