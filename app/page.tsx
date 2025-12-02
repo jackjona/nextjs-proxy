@@ -11,6 +11,8 @@ export default function Home() {
     if (!url) return;
     setLoading(true);
     window.location.href = `/api/download?url=${encodeURIComponent(url)}`;
+    // reset loading after 3 sec
+    setTimeout(() => setLoading(false), 3000);
   };
 
   return (
